@@ -1,4 +1,4 @@
-$dark-blue: rgb(12, 28, 73);
+@import 'colors';
 
 .app {
   background-color: rgb(23, 37, 66);
@@ -6,110 +6,11 @@ $dark-blue: rgb(12, 28, 73);
   display: flex;
   flex-direction: column;
 
-  .header {
-    background-color: rgba(0, 0, 0, .2);
-    padding: 0.625em;
-    display: flex;
-    justify-content: center;
-
-    &-title {
-      margin: 0;
-      text-align: center;
-      color: rgba(255, 255, 255, .4);
-      font-size: 1em;
-      position: relative;
-      padding-left: 1.65em;
-      display: flex;
-      align-items: center;
-
-      &:before {
-        content: '';
-        mask-image: url(../images/github.svg);
-        mask-size: contain;
-        mask-repeat: no-repeat;
-        mask-position: center;
-        background-color: rgba(255, 255, 255, .4);
-        height: 1.1em;
-        width: 1.2em;
-        position: absolute;
-        left: 0;
-      }
-    }
-  }
-
   .board {
     display: flex;
     padding: 10px;
     overflow-x: auto;
     flex-grow: 1;
     align-items: flex-start;
-    
-    .list {
-      background-color: #ebecf0;
-      width: 272px;
-      padding: 0 10px;
-      margin-right: 10px;
-      border-radius: 3px;
-      flex-shrink: 0;
-      cursor: pointer;
-      max-height: 100%;
-      display: flex;
-      flex-direction: column;
-
-      &-header {
-        padding: 10px 5px;
-
-        .list-title {
-          font-weight: 500;
-          font-size: .8em;
-          color: $dark-blue;
-        }
-      }
-      
-      &-content {
-        overflow: auto;
-
-        .card {
-          background-color: white;
-          margin-bottom: 10px;
-          cursor: pointer;
-          padding: 4px 10px 6px;
-          transition: ease .3s;
-          border-radius: 3px;
-          box-shadow: 0 1px 0 rgba(9, 30, 66, .25);
-          
-          &:hover, &:active {
-            background-color: #f2f4f8;
-            transition: ease .3s;
-          }
-
-          span {
-            font-size: .8em;
-            color: $dark-blue;
-          }
-        }
-      }
-
-      &-footer {
-        padding-bottom: 10px;
-
-        .add-card {
-          border: none;
-          background: none;
-          width: 100%;
-          padding: 5px 10px;
-          border-radius: 3px;
-          color: $dark-blue;
-          cursor: pointer;
-          transition: ease .3s;
-          text-align: left;
-          
-          &:hover, &:active {
-            background-color: rgba(0, 0, 60, .09);
-            transition: ease .3s;
-          }
-        }
-      }
-    }
   }
 }

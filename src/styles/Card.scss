@@ -1,0 +1,25 @@
+@import 'colors';
+
+.card {
+  background-color: white;
+  margin-bottom: 10px;
+  cursor: pointer;
+  padding: 4px 10px 6px;
+  transition: ease .3s;
+  border-radius: 3px;
+  box-shadow: 0 1px 0 rgba(9, 30, 66, .25);
+
+  &:last-child {
+    margin-bottom: 1px;
+  }
+  
+  &:hover, &:active {
+    background-color: #f2f4f8;
+    transition: ease .3s;
+  }
+
+  span {
+    font-size: .8em;
+    color: $dark-blue;
+  }
+}

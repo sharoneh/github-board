@@ -1,0 +1,68 @@
+@import 'colors';
+
+.list {
+  background-color: #ebecf0;
+  width: 272px;
+  padding: 0 10px;
+  margin-right: 10px;
+  border-radius: 3px;
+  flex-shrink: 0;
+  cursor: pointer;
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  &.empty {
+    padding: 0;
+    background-color: transparent;
+
+    .list-footer {
+      padding: 0;
+
+      .add {
+        padding: 10px;
+        color: rgba(255, 255, 255, .8);
+        background: rgba(255, 255, 255, .2);
+        
+        &:hover {
+          background: rgba(255, 255, 255, .3);
+        }
+      }
+    }
+  }
+
+  &-header {
+    padding: 10px 5px;
+
+    .list-title {
+      font-weight: 500;
+      font-size: .8em;
+      color: $dark-blue;
+    }
+  }
+  
+  &-content {
+    overflow: auto;
+  }
+
+  &-footer {
+    padding: 9px 0 10px;
+
+    .add {
+      border: none;
+      background: none;
+      width: 100%;
+      border-radius: 3px;
+      cursor: pointer;
+      transition: ease .3s;
+      text-align: left;
+      padding: 5px 10px;
+      color: $dark-blue;
+      
+      &:hover, &:active {
+        background-color: rgba(0, 0, 60, .09);
+        transition: ease .3s;
+      }
+    }
+  }
+}
