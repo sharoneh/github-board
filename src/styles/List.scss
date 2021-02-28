@@ -38,11 +38,93 @@
       font-weight: 500;
       font-size: .8em;
       color: $dark-blue;
+      user-select: none;
     }
   }
   
   &-content {
     overflow: auto;
+    
+    .card-editor {
+      width: 100%;
+      border: none;
+      background-color: white;
+      outline: none;
+      border-radius: 3px;
+      box-shadow: 0 1px 0 rgba(9, 30, 66, .25);
+      padding: 10px;
+      resize: none;
+      margin-top: 10px;
+    }
+
+    .editor-actions {
+      display: flex;
+      align-items: center;
+      margin-top: 5px;
+      
+      .add-card,
+      .cancel-card {
+        border: none;
+        background: none;
+        cursor: pointer;
+        outline: none;
+      }
+
+      .add-card {
+        background-color: #61bd4f;
+        color: white;
+        padding: 8px 12px;
+        border-radius: 3px;
+        transition: ease .3s;
+        
+        &:hover,
+        &:active {
+          opacity: .8;
+          transition: ease .3s;
+        }
+      }
+
+      .cancel-card {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        margin-left: 10px;
+        height: 20px;
+        width: 20px;
+        padding: 0;
+
+        &:before,
+        &:after {
+          content: '';
+          height: 2px;
+          width: 20px;
+          background-color: grey;
+          position: absolute;
+          top: 9px;
+          transform-origin: center;
+          border-radius: 1px;
+          transition: ease .3s;
+        }
+
+        &:before {
+          transform: rotate(45deg);
+        }
+        
+        &:after {
+          transform: rotate(-45deg);
+        }
+
+        &:hover,
+        &:active {
+          &:before,
+          &:after {
+            background-color: rgb(22, 22, 22);
+            transition: ease .3s;
+          }
+        }
+      }
+    }
   }
 
   &-footer {
@@ -58,6 +140,8 @@
       text-align: left;
       padding: 5px 10px;
       color: $dark-blue;
+      outline: none;
+      user-select: none;
       
       &:hover, &:active {
         background-color: rgba(0, 0, 60, .09);
