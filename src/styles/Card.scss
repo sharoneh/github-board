@@ -4,10 +4,13 @@
   background-color: white;
   margin-bottom: 10px;
   cursor: pointer;
-  padding: 4px 10px 6px;
+  padding: 5px 10px;
   transition: ease .3s;
   border-radius: 3px;
   box-shadow: 0 1px 0 rgba(9, 30, 66, .25);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 
   &:last-child {
     margin-bottom: 1px;
@@ -22,5 +25,19 @@
     font-size: .8em;
     color: $dark-blue;
     user-select: none;
+  }
+
+  .actions {
+    display: flex;
+    align-items: center;
+
+    button {
+      border: none;
+      background: none;
+      padding: 0;
+      cursor: pointer;
+      outline: none;
+      margin-left: 5px;
+    }
   }
 }

@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 
 import Header from './Header'
 import List from './List'
-import Card from './Card'
 import '../styles/App.scss'
 
 function App({ lists }) {
@@ -13,11 +12,12 @@ function App({ lists }) {
 
       <div className="board">
         {lists.map(({ title, tasks }, listIndex) => (
-          <List title={title} key={`list#${listIndex}`} index={listIndex}>
-            {tasks.map((task, taskIndex) => (
-              <Card title={task} key={`list#${listIndex}-card#${taskIndex}`} />
-            ))}
-          </List>
+          <List
+            title={title}
+            key={`list#${listIndex}`}
+            index={listIndex}
+            tasks={tasks}
+          />
         ))}
 
         <List />
