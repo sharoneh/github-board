@@ -49,7 +49,7 @@ const List = ({ title, issueState, issues, createIssue }) => {
           issues.map((issue, index) => (
             <Card
               issueState={issueState}
-              title={issue.title}
+              issue={issue}
               key={`list#${issueState}issueCard#${index}`}
             />
           ))}

@@ -20,7 +20,7 @@ export const fetchIssues = () => {
     try {
       const response = await octokit.request(
         'GET /repos/{owner}/{repo}/issues',
-        { owner, repo },
+        { owner, repo, state: 'all' },
       )
 
       let issues = { open: [], inProgress: [], closed: [] }
@@ -64,20 +64,101 @@ export const createIssue = (title, state) => {
   }
 }
 
-export const updateIssue = (issue_number, params) => {
-  return async (dispatch) => {
+const updateIssue = (issue_number, params) => {
+  try {
+    return octokit.request(
+      'PATCH /repos/{owner}/{repo}/issues/{issue_number}',
+      {
+        owner,
+        repo,
+        issue_number,
+        ...params,
+      },
+    )
+  } catch (err) {
+    console.error('Error updating issue', err)
+  }
+}
+
+export const closeIssue = (issue_number) => {
+  return async (dispatch, getState) => {
     try {
-      await octokit.request(
-        'PATCH /repos/{owner}/{repo}/issues/{issue_number}',
-        {
-          issue_number,
-          ...params,
-        },
+      const params = { state: 'closed', labels: [] }
+      const { data } = await updateIssue(issue_number, params)
+
+      let issues = getState().issues.issues
+      const issueIndex = issues.inProgress.findIndex(
+        (issue) => issue.number === issue_number,
+      )
+      issues = {
+        ...issues,
+        inProgress: update(issues.inProgress, { $splice: [[issueIndex, 1]] }),
+        closed: update(issues.closed, { $push: [data] }),
+      }
+
+      dispatch({ type: SET_ISSUES, payload: issues })
+    } catch (err) {
+      console.error('Error closing an issue', err)
+    }
+  }
+}
+
+export const moveIssueToProgress = (issue_number) => {
+  return async (dispatch, getState) => {
+    try {
+      const params = { state: 'open', labels: ['in-progress'] }
+      const { data } = await updateIssue(issue_number, params)
+
+      let issues = getState().issues.issues
+
+      const openIssueIndex = issues.open.findIndex(
+        (issue) => issue.number === issue_number,
+      )
+      const closedIssueIndex = issues.closed.findIndex(
+        (issue) => issue.number === issue_number,
       )
 
-      dispatch(fetchIssues)
+      console.log({ openIssueIndex, closedIssueIndex })
+
+      if (openIssueIndex > -1) {
+        issues.open = update(issues.open, { $splice: [[openIssueIndex, 1]] })
+      } else if (closedIssueIndex > -1) {
+        issues.closed = update(issues.closed, {
+          $splice: [[closedIssueIndex, 1]],
+        })
+      }
+
+      issues = {
+        ...issues,
+        inProgress: update(issues.inProgress, { $push: [data] }),
+      }
+
+      dispatch({ type: SET_ISSUES, payload: issues })
     } catch (err) {
-      console.error('Error updating issue', err)
+      console.error('Error moving issue to progress', err)
+    }
+  }
+}
+
+export const openIssue = (issue_number) => {
+  return async (dispatch, getState) => {
+    try {
+      const params = { state: 'open', labels: [] }
+      const { data } = await updateIssue(issue_number, params)
+
+      let issues = getState().issues.issues
+      const issueIndex = issues.inProgress.findIndex(
+        (issue) => issue.number === issue_number,
+      )
+      issues = {
+        ...issues,
+        inProgress: update(issues.inProgress, { $splice: [[issueIndex, 1]] }),
+        open: update(issues.open, { $push: [data] }),
+      }
+
+      dispatch({ type: SET_ISSUES, payload: issues })
+    } catch (err) {
+      console.error('Error opening issue', err)
     }
   }
 }

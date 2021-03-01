@@ -1,7 +1,6 @@
 import { createStore, applyMiddleware, combineReducers } from 'redux'
 import thunk from 'redux-thunk'
 import logger from 'redux-logger'
-import BoardReducer from './BoardReducer'
 import IssuesReducer from './IssuesReducer'
 
 let middleware = [thunk]
@@ -12,7 +11,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 const store = createStore(
-  combineReducers({ board: BoardReducer, issues: IssuesReducer }),
+  combineReducers({ issues: IssuesReducer }),
   applyMiddleware(...middleware),
 )
 
