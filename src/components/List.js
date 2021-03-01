@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { addTask, addList } from '../redux/BoardReducer'
@@ -8,6 +8,7 @@ import Card from './Card'
 const List = ({ title, index, addTask, addList, tasks }) => {
   const [editorActive, setEditorActive] = useState(false)
   const [text, setText] = useState('')
+  const ref = useRef(null)
 
   const btnLabel = tasks ? 'Adicionar cartão' : 'Adicionar lista'
 
@@ -17,6 +18,8 @@ const List = ({ title, index, addTask, addList, tasks }) => {
   }
 
   const add = () => {
+    if (!text) return
+
     if (tasks) {
       addTask(index, text)
     } else {
@@ -28,12 +31,18 @@ const List = ({ title, index, addTask, addList, tasks }) => {
   }
 
   const onType = (e) => {
-    if (e.key === 'Enter') add()
-    if (e.key === 'Escape') {
+    if (e.key === 'Enter') {
+      add()
+      setText('')
+    } else if (e.key === 'Escape') {
       setText('')
       setEditorActive(false)
     }
   }
+
+  useEffect(() => {
+    if (editorActive) ref.current.focus()
+  }, [editorActive])
 
   return (
     <div className={`list${tasks || editorActive ? '' : ' empty'}`}>
@@ -58,12 +67,14 @@ const List = ({ title, index, addTask, addList, tasks }) => {
       <div className="list-content">
         {editorActive && (
           <>
-            <textarea
+            <input
+              type="text"
               value={text}
               onChange={(e) => setText(e.target.value)}
               className="card-editor"
               rows={tasks ? 3 : 1}
-              onKeyDown={onType}
+              onKeyUp={onType}
+              ref={ref}
             />
 
             <div className="editor-actions">
@@ -82,9 +93,11 @@ const List = ({ title, index, addTask, addList, tasks }) => {
       </div>
 
       <div className="list-footer">
-        <button className="add" onClick={() => setEditorActive(true)}>
-          + {btnLabel}
-        </button>
+        {!editorActive && (
+          <button className="add" onClick={() => setEditorActive(true)}>
+            + {btnLabel}
+          </button>
+        )}
       </div>
     </div>
   )

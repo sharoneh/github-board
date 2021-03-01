@@ -1,7 +1,8 @@
-import { createStore, applyMiddleware } from 'redux'
+import { createStore, applyMiddleware, combineReducers } from 'redux'
 import thunk from 'redux-thunk'
 import logger from 'redux-logger'
 import BoardReducer from './BoardReducer'
+import IssuesReducer from './IssuesReducer'
 
 let middleware = [thunk]
 
@@ -10,6 +11,9 @@ if (process.env.NODE_ENV !== 'production') {
   middleware.push(logger)
 }
 
-const store = createStore(BoardReducer, applyMiddleware(...middleware))
+const store = createStore(
+  combineReducers({ board: BoardReducer, issues: IssuesReducer }),
+  applyMiddleware(...middleware),
+)
 
 export default store

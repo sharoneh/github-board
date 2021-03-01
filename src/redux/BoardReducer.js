@@ -22,7 +22,7 @@ export const SET_LISTS = 'SET_LISTS'
 // actions
 export const addTask = (listIndex, task) => {
   return (dispatch, getState) => {
-    let lists = [...getState().lists]
+    let lists = [...getState().board.lists]
 
     lists[listIndex].tasks = update(lists[listIndex].tasks, { $push: [task] })
 
@@ -32,7 +32,7 @@ export const addTask = (listIndex, task) => {
 
 export const addList = (title) => {
   return (dispatch, getState) => {
-    let lists = [...getState().lists]
+    let lists = [...getState().board.lists]
 
     lists = update(lists, { $push: [{ title, tasks: [] }] })
 
@@ -42,7 +42,7 @@ export const addList = (title) => {
 
 export const moveTaskInList = (listIndex, from, to) => {
   return (dispatch, getState) => {
-    let lists = [...getState().lists]
+    let lists = [...getState().board.lists]
 
     lists[listIndex].tasks = move(lists[listIndex].tasks, from, to)
 
@@ -52,7 +52,7 @@ export const moveTaskInList = (listIndex, from, to) => {
 
 export const moveTaskToList = (taskIndex, from, to) => {
   return (dispatch, getState) => {
-    let lists = [...getState().lists]
+    let lists = [...getState().board.lists]
 
     const task = lists[from].tasks[taskIndex]
 

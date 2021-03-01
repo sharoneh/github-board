@@ -26,7 +26,7 @@ function App({ lists }) {
   )
 }
 
-const mapStateToProps = (state) => ({ lists: state.lists })
+const mapStateToProps = (state) => ({ lists: state.board.lists })
 
 App.propTypes = {
   lists: PropTypes.arrayOf(

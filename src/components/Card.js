@@ -63,7 +63,7 @@ Card.propTypes = {
   lists: PropTypes.array.isRequired,
 }
 
-const mapStateToProps = (state) => ({ lists: state.lists })
+const mapStateToProps = (state) => ({ lists: state.board.lists })
 
 export default connect(mapStateToProps, { moveTaskInList, moveTaskToList })(
   Card,
