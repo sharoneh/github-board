@@ -7,7 +7,9 @@ import List from './List'
 import '../styles/App.scss'
 import { fetchIssues } from '../redux/IssuesReducer'
 
-function App({ lists, fetchIssues }) {
+const labels = { open: 'OPEN', inProgress: 'IN PROGRESS', closed: 'CLOSED' }
+
+function App({ issues, fetchIssues }) {
   useEffect(fetchIssues, [])
 
   return (
@@ -15,30 +17,31 @@ function App({ lists, fetchIssues }) {
       <Header />
 
       <div className="board">
-        {lists.map(({ title, tasks }, listIndex) => (
-          <List
-            title={title}
-            key={`list#${listIndex}`}
-            index={listIndex}
-            tasks={tasks}
-          />
-        ))}
+        {Object.keys(issues).map((issueState, index) => {
+          const issueList = issues[issueState]
 
-        <List />
+          return (
+            <List
+              title={labels[issueState]}
+              key={`list#${index}`}
+              issueState={issueState}
+              issues={issueList}
+            />
+          )
+        })}
       </div>
     </div>
   )
 }
 
-const mapStateToProps = (state) => ({ lists: state.board.lists })
+const mapStateToProps = (state) => ({ issues: state.issues.issues })
 
 App.propTypes = {
-  lists: PropTypes.arrayOf(
-    PropTypes.shape({
-      title: PropTypes.string.isRequired,
-      tasks: PropTypes.arrayOf(PropTypes.string).isRequired,
-    }),
-  ),
+  issues: PropTypes.shape({
+    open: PropTypes.array.isRequired,
+    inProgress: PropTypes.array.isRequired,
+    closed: PropTypes.array.isRequired,
+  }),
   fetchIssues: PropTypes.func.isRequired,
 }
 

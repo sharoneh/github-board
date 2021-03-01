@@ -26,10 +26,14 @@ export const fetchIssues = () => {
       let issues = { open: [], inProgress: [], closed: [] }
 
       response.data.forEach((issue) => {
-        if (issue.status === 'open' || issue.status === 'closed') {
-          issues[issue.status].push(issue)
-        } else if (issue.labels.some((label) => label.name === 'in-progress')) {
-          issues.inProgress.push(issue)
+        if (issue.state === 'open') {
+          if (issue.labels.some((label) => label.name === 'in-progress')) {
+            issues.inProgress.push(issue)
+          } else {
+            issues.open.push(issue)
+          }
+        } else if (issue.state === 'closed') {
+          issues.closed.push(issue)
         }
       })
 
@@ -40,7 +44,7 @@ export const fetchIssues = () => {
   }
 }
 
-export const createIssue = (title) => {
+export const createIssue = (title, state) => {
   return async (dispatch) => {
     try {
       const { data } = await octokit.request(
@@ -49,12 +53,31 @@ export const createIssue = (title) => {
           owner,
           repo,
           title,
+          labels: state === 'inProgress' ? ['in-progress'] : [],
         },
       )
 
-      dispatch({ type: ADD_ISSUE, payload: data })
+      dispatch({ type: ADD_ISSUE, payload: { state, issue: data } })
     } catch (err) {
       console.error('Error creating issue', err)
+    }
+  }
+}
+
+export const updateIssue = (issue_number, params) => {
+  return async (dispatch) => {
+    try {
+      await octokit.request(
+        'PATCH /repos/{owner}/{repo}/issues/{issue_number}',
+        {
+          issue_number,
+          ...params,
+        },
+      )
+
+      dispatch(fetchIssues)
+    } catch (err) {
+      console.error('Error updating issue', err)
     }
   }
 }
@@ -66,7 +89,15 @@ const IssuesReducer = (state = INITIAL_STATE, action) => {
     case SET_ISSUES:
       return { ...state, issues: payload }
     case ADD_ISSUE:
-      return { ...state, issues: update(state.issues, { $push: [payload] }) }
+      return {
+        ...state,
+        issues: {
+          ...state.issues,
+          [payload.state]: update(state.issues[payload.state], {
+            $push: [payload.issue],
+          }),
+        },
+      }
     default:
       return state
   }

@@ -1,16 +1,16 @@
 import { useState, useRef, useEffect } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import { addTask, addList } from '../redux/BoardReducer'
+import { createIssue } from '../redux/IssuesReducer'
 import '../styles/List.scss'
 import Card from './Card'
 
-const List = ({ title, index, addTask, addList, tasks }) => {
+const List = ({ title, issueState, issues, createIssue }) => {
   const [editorActive, setEditorActive] = useState(false)
   const [text, setText] = useState('')
   const ref = useRef(null)
 
-  const btnLabel = tasks ? 'Adicionar cartão' : 'Adicionar lista'
+  const btnLabel = issues ? 'Adicionar cartão' : 'Adicionar lista'
 
   const cancel = () => {
     setEditorActive(false)
@@ -20,23 +20,15 @@ const List = ({ title, index, addTask, addList, tasks }) => {
   const add = () => {
     if (!text) return
 
-    if (tasks) {
-      addTask(index, text)
-    } else {
-      addList(text)
-      setEditorActive(false)
-    }
-
+    createIssue(text, issueState)
     setText('')
   }
 
   const onType = (e) => {
     if (e.key === 'Enter') {
       add()
-      setText('')
     } else if (e.key === 'Escape') {
-      setText('')
-      setEditorActive(false)
+      cancel()
     }
   }
 
@@ -45,21 +37,20 @@ const List = ({ title, index, addTask, addList, tasks }) => {
   }, [editorActive])
 
   return (
-    <div className={`list${tasks || editorActive ? '' : ' empty'}`}>
-      {tasks && (
+    <div className={`list${issues || editorActive ? '' : ' empty'}`}>
+      {issues && (
         <div className="list-header">
           <span className="list-title">{title}</span>
         </div>
       )}
 
       <div className="list-content">
-        {tasks &&
-          tasks.map((task, taskIndex) => (
+        {issues &&
+          issues.map((issue, index) => (
             <Card
-              listIndex={index}
-              taskIndex={taskIndex}
-              title={task}
-              key={`list#${index}taskCard#${taskIndex}`}
+              issueState={issueState}
+              title={issue.title}
+              key={`list#${issueState}issueCard#${index}`}
             />
           ))}
       </div>
@@ -72,7 +63,6 @@ const List = ({ title, index, addTask, addList, tasks }) => {
               value={text}
               onChange={(e) => setText(e.target.value)}
               className="card-editor"
-              rows={tasks ? 3 : 1}
               onKeyUp={onType}
               ref={ref}
             />
@@ -93,7 +83,7 @@ const List = ({ title, index, addTask, addList, tasks }) => {
       </div>
 
       <div className="list-footer">
-        {!editorActive && (
+        {!editorActive && issueState !== 'closed' && (
           <button className="add" onClick={() => setEditorActive(true)}>
             + {btnLabel}
           </button>
@@ -105,10 +95,9 @@ const List = ({ title, index, addTask, addList, tasks }) => {
 
 List.propTypes = {
   title: PropTypes.string,
-  index: PropTypes.number,
-  addTask: PropTypes.func.isRequired,
-  addList: PropTypes.func.isRequired,
-  tasks: PropTypes.arrayOf(PropTypes.string),
+  issueState: PropTypes.string,
+  createIssue: PropTypes.func.isRequired,
+  issues: PropTypes.array,
 }
 
-export default connect(null, { addTask, addList })(List)
+export default connect(null, { createIssue })(List)
