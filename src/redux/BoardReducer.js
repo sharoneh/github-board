@@ -3,16 +3,9 @@ import update from 'immutability-helper'
 
 const INITIAL_STATE = {
   lists: [
-    { title: 'TO DO', tasks: ['task1', 'task2', 'task3'] },
-    {
-      title: 'IN PROGRESS',
-      tasks: ['task4', 'task5', 'task6'],
-    },
-    {
-      title: 'IN REVIEW',
-      tasks: ['task7', 'task8', 'task9'],
-    },
-    { title: 'DONE', tasks: ['task10', 'task11', 'task12'] },
+    { title: 'TO DO', tasks: [] },
+    { title: 'IN PROGRESS', tasks: [] },
+    { title: 'DONE', tasks: [] },
   ],
 }
 
